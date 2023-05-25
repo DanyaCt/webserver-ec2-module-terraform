@@ -30,4 +30,6 @@ workflows:
     jobs:
       - aws-cli-cred-setup:
           context: aws
-      - single-job-lifecycle
+      - single-job-lifecycle:
+          requires:
+            - aws-cli-cred-setup
