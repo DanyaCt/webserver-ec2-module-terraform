@@ -20,7 +20,7 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY
           aws-secret-access-key: AWS_ACCESS_SECRET
           aws-region: AWS_REGION_NAME
-  single-job-lifecycle:
+  init-validate-plan:
     executor: terraform/default
     steps:
       - checkout
@@ -30,17 +30,40 @@ jobs:
           path: infrastructure/
       - terraform/plan:
           path: infrastructure/
+    working_directory: ~/src
+  apply:
+    executor: terraform/default
+    steps:
+      - checkout
       - terraform/apply:
           path: infrastructure/
+  working_directory: ~/src
+  destroy:
+    executor: terraform/default
+    steps:
+      - checkout
       - terraform/destroy:
           path: infrastructure/
-    working_directory: ~/src
+  working_directory: ~/src
 workflows:
-  single-job-lifecycle:
+  deploy:
     jobs:
       - tfsec
       - aws-cli-cred-setup:
           context: aws
-      - single-job-lifecycle:
+      - init-validate-plan:
           requires:
             - aws-cli-cred-setup
+      - hold:
+          type: approval
+          requires:
+            - init-validate-plan
+      - apply:
+          requires:
+            - hold
+      - hold2:
+          requires:
+            - apply
+      - destroy:
+          requires:
+            - hold2
