@@ -3,16 +3,15 @@ orbs:
   terraform: circleci/terraform@3.1
   aws-cli: circleci/aws-cli@2.0.6
   tfsec: mycodeself/tfsec@1.1.0
-executors:
-  tfsec/default:
-    docker:
-      - image: 'mycodeself/tfsec:1.1.0'
 jobs:
   tfsec:
+    parameters:
     executor: tfsec/default
     steps:
       - checkout
-      - run: tfsec infrastructure/
+      - tfsec/scan: 
+          directory: ./infrastructure
+
   aws-cli-cred-setup:
     executor: aws-cli/default
     steps:
