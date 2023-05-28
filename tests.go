@@ -12,7 +12,7 @@ func Tests(t *testing.T) {
 
     terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 
-		TerraformDir: "~/project/infrastructure/",
+		TerraformDir: "~/project/infrastructure",
 	})
 
 	HttpName1 := terraform.Output(t, terraformOptions, "http_instance_name1")
