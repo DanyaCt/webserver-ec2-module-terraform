@@ -3,6 +3,7 @@ orbs:
   terraform: circleci/terraform@3.1
   aws-cli: circleci/aws-cli@2.0.6
   tfsec: mycodeself/tfsec@1.1.0
+  go: circleci/go@1.7.3
 jobs:
   tfsec:
     parameters:
@@ -38,6 +39,15 @@ jobs:
       - terraform/apply:
           path: infrastructure/
     working_directory: ~/src
+  terratest:
+    executor:
+      name: go/default
+      tag: '1.16'
+    steps:
+      - checkout
+      - run: go mod init "tests"
+      - run: go mod tidy
+      - run: go test -v
   destroy:
     executor: terraform/default
     steps:
