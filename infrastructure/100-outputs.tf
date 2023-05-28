@@ -45,3 +45,15 @@ output "http_subnet_cidr" {
 output "db_subnet_cidr" {
   value = aws_subnet.db.cidr_block
 }
+
+output "db1_id" {
+  value = aws_instance.db["instance-db-1"].id
+}
+
+output "db2_id" {
+  value = aws_instance.db["instance-db-2"].id
+}
+
+output "db3_id" {
+  value = aws_instance.db["instance-db-3"].id
+}

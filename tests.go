@@ -4,7 +4,7 @@ import (
     "testing"
     "github.com/stretchr/testify/assert"
     "github.com/gruntwork-io/terratest/modules/terraform"
-    "github.com/gruntwork-io/terratest/modules/aws"
+	"github.com/gruntwork-io/terratest/modules/aws"
 )
 
 func Tests(t *testing.T) {
@@ -38,4 +38,16 @@ func Tests(t *testing.T) {
 
     DbSubnetCidr := terraform.Output(t, terraformOptions, "db_subnet_cidr")
     assert.Equal(t, "192.168.2.0/24", DbSubnetCidr, "Db subnet cidr block does not match.")
+
+	db1_id := terraform.Output(t, terraformOptions, "db1_id")
+    db1_public_ip := aws.GetPublicIpOfEc2Instance(t, db1_id, "eu-central-1")
+    assert.Equal(t, "False", db1_public_ip)
+
+    db2_id := terraform.Output(t, terraformOptions, "db2_id")
+    db2_public_ip := aws.GetPublicIpOfEc2Instance(t, db2_id, "eu-central-1")
+    assert.Equal(t, "False", db2_public_ip)
+
+    db3_id := terraform.Output(t, terraformOptions, "db3_id")
+    db3_public_ip := aws.GetPublicIpOfEc2Instance(t, db3_id, "eu-central-1")
+    assert.Equal(t, "False", db3_public_ip)
 }
