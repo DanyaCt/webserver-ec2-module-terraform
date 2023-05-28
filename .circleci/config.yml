@@ -47,6 +47,8 @@ jobs:
       - checkout
       - run: go mod init "tests"
       - run: go mod tidy
+      - run: terraform -version
+      - run: pwd
       - run: go test -v
   destroy:
     executor: terraform/default
