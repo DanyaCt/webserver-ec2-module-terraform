@@ -71,10 +71,13 @@ workflows:
       - apply:
           requires:
             - hold
+      - terratest:
+          requires:
+            - apply
       - hold2:
           type: approval
           requires:
-            - apply
+            - terratest
       - destroy:
           requires:
             - hold2
