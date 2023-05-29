@@ -7,7 +7,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/aws"
 )
 
-func Tests(t *testing.T) {
+func TestTests(t *testing.T) {
     t.Parallel()
 
     terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
@@ -25,7 +25,7 @@ func Tests(t *testing.T) {
 	assert.Equal(t, "instance-db-1", DbName1, "Instance name does not match.")
 
 	DbName2 := terraform.Output(t, terraformOptions, "db_instance_name2")
-	assert.Equal(t, "iinstance-db-2", DbName2, "Instance name does not match.")
+	assert.Equal(t, "instance-db-2", DbName2, "Instance name does not match.")
 
 	DbName3 := terraform.Output(t, terraformOptions, "db_instance_name3")
 	assert.Equal(t, "instance-db-3", DbName3, "Instance name does not match.")
@@ -41,13 +41,13 @@ func Tests(t *testing.T) {
 
 	db1_id := terraform.Output(t, terraformOptions, "db1_id")
     db1_public_ip := aws.GetPublicIpOfEc2Instance(t, db1_id, "eu-central-1")
-    assert.Equal(t, "False", db1_public_ip)
+    assert.Equal(t, "", db1_public_ip)
 
     db2_id := terraform.Output(t, terraformOptions, "db2_id")
     db2_public_ip := aws.GetPublicIpOfEc2Instance(t, db2_id, "eu-central-1")
-    assert.Equal(t, "False", db2_public_ip)
+    assert.Equal(t, "", db2_public_ip)
 
     db3_id := terraform.Output(t, terraformOptions, "db3_id")
     db3_public_ip := aws.GetPublicIpOfEc2Instance(t, db3_id, "eu-central-1")
-    assert.Equal(t, "False", db3_public_ip)
+    assert.Equal(t, "", db3_public_ip)
 }
