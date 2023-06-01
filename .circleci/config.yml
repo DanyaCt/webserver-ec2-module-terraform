@@ -29,9 +29,9 @@ jobs:
           path: infrastructure/
       - terraform/validate:
           path: infrastructure/
-      - run:
-          name: terraform plan
-          command: cd infrastructure && terraform plan -var "http_subnet='$SUBNETNAME'"
+      - terraform/plan:
+          path: infrastructure/
+          var: http_subnet=$SUBNETNAME
     working_directory: ~/src
   apply:
     executor: terraform/default
