@@ -66,11 +66,11 @@ workflows:
     jobs:
       - tfsec:
         context: << pipeline.git.branch >>
-          filters:
-            branches:
-              only: 
-                - test
-                - production
+        filters:
+          branches:
+            only: 
+              - test
+              - production
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
