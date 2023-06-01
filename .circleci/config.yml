@@ -29,7 +29,6 @@ jobs:
           path: infrastructure/
       - terraform/validate:
           path: infrastructure/
-      - run: echo ${CIRCLE_BRANCH}
       - run:
           name: terraform plan
           command: cd infrastructure && terraform plan -var 'http_subnet=$SUBNETNAME'
@@ -66,7 +65,7 @@ workflows:
   deploy:
     jobs:
       - tfsec:
-          context: test
+          context: ${CIRCLE_BRANCH}
           filters:
             branches:
               only: 
@@ -75,7 +74,7 @@ workflows:
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
-          context: test
+          context: ${CIRCLE_BRANCH}
           filters:
             branches:
               only: 
@@ -88,7 +87,7 @@ workflows:
           requires:
             - init-validate-plan
       - apply:
-          context: test
+          context: ${CIRCLE_BRANCH}
           filters:
             branches:
               only: 
@@ -104,7 +103,7 @@ workflows:
           requires:
             - terratest
       - destroy:
-          context: test
+          context: ${CIRCLE_BRANCH}
           filters:
             branches:
               only: 
