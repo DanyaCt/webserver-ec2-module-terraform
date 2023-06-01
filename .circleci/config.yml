@@ -65,16 +65,18 @@ workflows:
   deploy:
     jobs:
       - tfsec:
-        context: {CIRCLE_BRANCH: $CIRCLE_BRANCH}
-        filters:
-          branches:
-            only: 
-              - test
-              - production
+          context:
+            CIRCLE_BRANCH: $CIRCLE_BRANCH
+          filters:
+            branches:
+              only: 
+                - test
+                - production
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
-          context: {CIRCLE_BRANCH: $CIRCLE_BRANCH}
+          context: 
+            CIRCLE_BRANCH: $CIRCLE_BRANCH
           filters:
             branches:
               only: 
@@ -87,7 +89,8 @@ workflows:
           requires:
             - init-validate-plan
       - apply:
-          context: {CIRCLE_BRANCH: $CIRCLE_BRANCH}
+          context: 
+            CIRCLE_BRANCH: $CIRCLE_BRANCH
           filters:
             branches:
               only: 
@@ -103,7 +106,8 @@ workflows:
           requires:
             - terratest
       - destroy:
-          context: {CIRCLE_BRANCH: $CIRCLE_BRANCH}
+          context: 
+            CIRCLE_BRANCH: $CIRCLE_BRANCH
           filters:
             branches:
               only: 
