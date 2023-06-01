@@ -29,15 +29,17 @@ jobs:
           path: infrastructure/
       - terraform/validate:
           path: infrastructure/
-      - terraform/plan:
-          path: infrastructure/
+      - run:
+          name: terraform plan
+          command: terraform plan -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
   apply:
     executor: terraform/default
     steps:
       - checkout
-      - terraform/apply:
-          path: infrastructure/
+      - run:
+          name: terraform apply
+          command: terraform apply --auto-approve -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
   terratest:
     executor:
@@ -55,16 +57,29 @@ jobs:
     executor: terraform/default
     steps:
       - checkout
-      - terraform/destroy:
-          path: infrastructure/
+      - run:
+          name: terraform destroy
+          command: terraform destroy --auto-approve -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
 workflows:
   deploy:
     jobs:
-      - tfsec
+      - tfsec:
+        context: << pipeline.git.branch >>
+          filters:
+            branches:
+              only: 
+                - test
+                - production
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
+          context: << pipeline.git.branch >>
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - aws-cli-cred-setup
       - hold:
@@ -72,6 +87,12 @@ workflows:
           requires:
             - init-validate-plan
       - apply:
+          context: << pipeline.git.branch >>
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - hold
       - terratest:
@@ -82,5 +103,11 @@ workflows:
           requires:
             - terratest
       - destroy:
+          context: << pipeline.git.branch >>
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - hold2
