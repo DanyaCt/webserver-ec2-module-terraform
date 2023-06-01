@@ -37,7 +37,7 @@ jobs:
     executor: terraform/default
     steps:
       - checkout
-     - terraform/apply:
+      - terraform/apply:
           path: infrastructure/
           var: http_subnet=$SUBNETNAME
     working_directory: ~/src
