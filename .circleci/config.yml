@@ -23,7 +23,6 @@ jobs:
           aws-region: AWS_REGION_NAME
   init-validate-plan:
     executor: terraform/default
-    context: ${CIRCLE_BRANCH}
     steps:
       - checkout
       - terraform/init:
