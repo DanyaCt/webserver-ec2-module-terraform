@@ -31,7 +31,7 @@ jobs:
           path: infrastructure/
       - run:
           name: terraform plan
-          command: cd infrastructure && terraform plan -var 'http_subnet=$SUBNETNAME'
+        command: cd infrastructure && terraform plan -var 'http_subnet=${SUBNETNAME}'
     working_directory: ~/src
   apply:
     executor: terraform/default
@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run:
           name: terraform apply
-          command: cd infrastructure && terraform apply --auto-approve -var 'http_subnet=$SUBNETNAME'
+          command: cd infrastructure && terraform apply --auto-approve -var 'http_subnet=${SUBNETNAME}'
     working_directory: ~/src
   terratest:
     executor:
