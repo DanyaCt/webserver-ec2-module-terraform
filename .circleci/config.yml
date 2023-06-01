@@ -29,12 +29,10 @@ jobs:
           path: infrastructure/
       - terraform/validate:
           path: infrastructure/
-      - run: # print the name of the branch we're on
-            name: "What branch am I on?"
-            command: echo ${CIRCLE_BRANCH}
+      - run: echo ${CIRCLE_BRANCH}
       - run:
           name: terraform plan
-        command: cd infrastructure && terraform plan -var 'http_subnet=$SUBNETNAME'
+          command: cd infrastructure && terraform plan -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
   apply:
     executor: terraform/default
