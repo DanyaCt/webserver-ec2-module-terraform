@@ -13,6 +13,9 @@ jobs:
       - tfsec/scan: 
           directory: ./infrastructure
           exclude-checks: 'aws-ec2-enable-at-rest-encryption,aws-ec2-enforce-http-token-imds,aws-ec2-require-vpc-flow-logs-for-all-vpcs,aws-ec2-add-description-to-security-group-rule'
+      - run: # print the name of the branch we're on
+            name: "What branch am I on?"
+            command: echo ${CIRCLE_BRANCH}
 
   aws-cli-cred-setup:
     executor: aws-cli/default
@@ -31,7 +34,7 @@ jobs:
           path: infrastructure/
       - run:
           name: terraform plan
-        command: cd infrastructure && terraform plan -var 'http_subnet=${SUBNETNAME}'
+        command: cd infrastructure && terraform plan -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
   apply:
     executor: terraform/default
@@ -39,7 +42,7 @@ jobs:
       - checkout
       - run:
           name: terraform apply
-          command: cd infrastructure && terraform apply --auto-approve -var 'http_subnet=${SUBNETNAME}'
+          command: cd infrastructure && terraform apply --auto-approve -var 'http_subnet=$SUBNETNAME'
     working_directory: ~/src
   terratest:
     executor:
