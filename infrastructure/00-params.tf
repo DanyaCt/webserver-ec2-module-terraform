@@ -17,7 +17,7 @@ variable "network_http" {
 
 variable "http_subnet" {
   type    = string
-  default = var.SUBNETNAME
+  default = "subnet_http"
 }
 
 # Set number of instance
