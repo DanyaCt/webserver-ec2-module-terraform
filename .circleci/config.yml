@@ -23,6 +23,7 @@ jobs:
           aws-region: AWS_REGION_NAME
   init-validate-plan:
     executor: terraform/default
+    context: ${CIRCLE_BRANCH}
     steps:
       - checkout
       - terraform/init:
@@ -30,7 +31,6 @@ jobs:
       - terraform/validate:
           path: infrastructure/
       - terraform/plan:
-          context: ${CIRCLE_BRANCH}
           path: infrastructure/
           var: http_subnet=$SUBNETNAME
     working_directory: ~/src
