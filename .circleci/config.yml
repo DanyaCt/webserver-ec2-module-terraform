@@ -75,7 +75,7 @@ workflows:
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
-          context: test
+          context: "<< pipeline.git.branch >>"
           filters:
             branches:
               only: 
