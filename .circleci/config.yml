@@ -25,6 +25,7 @@ jobs:
     executor: terraform/default
     steps:
       - checkout
+      - run: echo ${CIRCLE_BRANCH}
       - terraform/init:
           path: infrastructure/
       - terraform/validate:
@@ -74,7 +75,7 @@ workflows:
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
-          context: test
+          context: ${CIRCLE_BRANCH}
           filters:
             branches:
               only: 
