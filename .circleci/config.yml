@@ -25,12 +25,14 @@ jobs:
     executor: terraform/default
     steps:
       - checkout
+      - run: echo ${CIRCLE_BRANCH}
       - terraform/init:
           path: infrastructure/
       - terraform/validate:
           path: infrastructure/
       - terraform/plan:
           path: infrastructure/
+          var: http_subnet=$SUBNETNAME
     working_directory: ~/src
   apply:
     executor: terraform/default
@@ -38,6 +40,7 @@ jobs:
       - checkout
       - terraform/apply:
           path: infrastructure/
+          var: http_subnet=$SUBNETNAME
     working_directory: ~/src
   terratest:
     executor:
@@ -57,14 +60,27 @@ jobs:
       - checkout
       - terraform/destroy:
           path: infrastructure/
+          var: http_subnet=$SUBNETNAME
     working_directory: ~/src
 workflows:
   deploy:
     jobs:
-      - tfsec
+      - tfsec:
+          context: ${CIRCLE_BRANCH}
+          filters:
+            branches:
+              only: 
+                - test
+                - production
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
+          context: "<< pipeline.git.branch >>"
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - aws-cli-cred-setup
       - hold:
@@ -72,6 +88,12 @@ workflows:
           requires:
             - init-validate-plan
       - apply:
+          context: "<< pipeline.git.branch >>"
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - hold
       - terratest:
@@ -82,5 +104,11 @@ workflows:
           requires:
             - terratest
       - destroy:
+          context: ${CIRCLE_BRANCH}
+          filters:
+            branches:
+              only: 
+                - test
+                - production
           requires:
             - hold2
