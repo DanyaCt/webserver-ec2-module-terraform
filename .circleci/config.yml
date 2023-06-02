@@ -32,6 +32,7 @@ jobs:
           path: infrastructure/
       - terraform/plan:
           path: infrastructure/
+          var: http_subnet=$SUBNETNAME
     working_directory: ~/src
   apply:
     executor: terraform/default
