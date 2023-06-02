@@ -75,7 +75,7 @@ workflows:
       - aws-cli-cred-setup:
           context: aws
       - init-validate-plan:
-          context: ${CIRCLE_BRANCH}
+          context: test
           filters:
             branches:
               only: 
